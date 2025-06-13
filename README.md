@@ -8,7 +8,7 @@ This project provides a very small scale deployment for extracting structured da
 2. Build and start services:
 
 ```bash
-docker compose up -d --build
+docker-compose up -d --build
 ```
 
 The frontend will be available at http://localhost:3000 and proxies API requests to the backend.
@@ -22,3 +22,29 @@ git pull
 docker compose down
 docker compose up -d --build
 ```
+
+
+
+```
+git clone https://github.com/sherafyk/SFK2.git
+```
+```
+cd SFK2
+```
+```
+# Create .env file
+cp .env.example .env
+```
+```
+# Create directories
+mkdir -p uploads data
+```
+```
+# Build and run
+docker-compose up -d
+```
+Simple Update Process
+cd SFK2
+git pull
+docker compose down
+docker compose up -d --build
