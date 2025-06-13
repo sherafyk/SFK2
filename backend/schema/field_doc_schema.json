@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Field Document",
+  "type": "object",
+  "properties": {
+    "barge": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "voyage_number": {"type": "string"},
+        "otb_job_number": {"type": "string"}
+      },
+      "required": ["name"],
+      "additionalProperties": false
+    },
+    "port": {
+      "type": "object",
+      "properties": {
+        "vessel_name": {"type": "string"},
+        "port_city": {"type": "string"}
+      },
+      "required": ["vessel_name"],
+      "additionalProperties": false
+    },
+    "arrival": {"$ref": "#/definitions/arrivalDeparture"},
+    "departure": {"$ref": "#/definitions/arrivalDeparture"},
+    "products_loaded_discharged": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/definitions/productTotals"}
+    }
+  },
+  "required": ["barge", "port", "arrival", "departure"],
+  "additionalProperties": false,
+  "definitions": {
+    "arrivalDeparture": {
+      "type": "object",
+      "properties": {
+        "water_specific_gravity": {"type": "number"},
+        "drafts_ft": {
+          "type": "object",
+          "properties": {
+            "fwd_port": {"type": "number"},
+            "fwd_stbd": {"type": "number"},
+            "aft_port": {"type": "number"},
+            "aft_stbd": {"type": "number"}
+          },
+          "required": ["fwd_port", "fwd_stbd", "aft_port", "aft_stbd"],
+          "additionalProperties": false
+        },
+        "timestamps": {
+          "type": "object",
+          "properties": {
+            "arrival": {"type": "string", "format": "date-time"},
+            "all_fast": {"type": "string", "format": "date-time"},
+            "boom_on": {"type": "string", "format": "date-time"},
+            "hose_on": {"type": "string", "format": "date-time"},
+            "comm_ld": {"type": "string", "format": "date-time"},
+            "comp_ld": {"type": "string", "format": "date-time"},
+            "hose_off": {"type": "string", "format": "date-time"},
+            "boom_off": {"type": "string", "format": "date-time"},
+            "depart": {"type": "string", "format": "date-time"}
+          },
+          "additionalProperties": false
+        },
+        "tanks": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/tankCondition"}
+        },
+        "summary_by_product": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/definitions/productTotals"}
+        }
+      },
+      "required": ["tanks"],
+      "additionalProperties": false
+    },
+    "tankCondition": {
+      "type": "object",
+      "properties": {
+        "tank_id": {"type": "string"},
+        "product": {"type": "string"},
+        "api": {"type": "number"},
+        "ullage_ft": {"type": "number"},
+        "ullage_in": {"type": "number"},
+        "temperature_f": {"type": "number"},
+        "water_bbls": {"type": "number"},
+        "gross_bbls": {"type": "number"},
+        "net_bbls": {"type": "number"},
+        "metric_tons": {"type": "number"}
+      },
+      "required": [
+        "tank_id",
+        "product",
+        "api",
+        "ullage_ft",
+        "ullage_in",
+        "temperature_f",
+        "water_bbls",
+        "gross_bbls"
+      ],
+      "additionalProperties": false
+    },
+    "productTotals": {
+      "type": "object",
+      "properties": {
+        "gross_bbls": {"type": "number"},
+        "net_bbls": {"type": "number"},
+        "metric_tons": {"type": "number"}
+      },
+      "required": ["gross_bbls"],
+      "additionalProperties": false
+    }
+  }
+}
