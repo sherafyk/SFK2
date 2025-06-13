@@ -6,7 +6,17 @@ from pathlib import Path
 from .models import FieldDocument
 from pydantic import ValidationError
 
-client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+_client = None
+
+def get_openai_client() -> openai.OpenAI:
+    """Return an OpenAI client or raise a clear error if the API key is missing."""
+    global _client
+    if _client is None:
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError("OPENAI_API_KEY environment variable is not set")
+        _client = openai.OpenAI(api_key=api_key)
+    return _client
 
 
 def extract_document_data(image_path: Path, max_retries: int = 3) -> FieldDocument:
@@ -32,6 +42,8 @@ def extract_document_data(image_path: Path, max_retries: int = 3) -> FieldDocume
     ]
 
     extracted = None
+    client = get_openai_client()
+
     for attempt in range(max_retries):
         try:
             response = client.chat.completions.create(
